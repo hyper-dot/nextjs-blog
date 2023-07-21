@@ -1,13 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
-import styles from './footer.module.css';
 
 const Footer = () => {
+  const styles = {
+    display: 'flex',
+    justifyContent: 'center',
+    color: 'white',
+    margin: '10px 0',
+  };
+
   return (
-    <footer className={styles.footer}>
-      <div>
+    <footer style={styles}>
+      <p>
         2023&copy;<Link href='/'> Roshan Paudel</Link>. All right reserved.
-      </div>
+      </p>
     </footer>
   );
 };
