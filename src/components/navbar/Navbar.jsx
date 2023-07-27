@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import styles from './navbar.module.css';
+import DarkModeToggle from '../DarkModeToggle/DarkModeToggle';
 
 function logout() {
   console.log('logout');
@@ -16,6 +17,7 @@ const Navbar = () => {
         </Link>
       </div>
       <div className={styles.links}>
+        <DarkModeToggle />
         <Link className={styles.link} href='/dashboard/login'>
           Login
         </Link>
