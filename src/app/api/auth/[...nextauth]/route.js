@@ -1,16 +1,57 @@
-import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
+import NextAuth from "next-auth";
+import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import User from "@/models/User";
+import connect from "@/utils/db";
+import bcrypt from "bcryptjs";
 
-export const authOptions = {
-  // Configure one or more authentication providers
+const handler = NextAuth({
   providers: [
-    GoogleProvider({
-      clientId:
-        '483913172031-1i0f07c7n1hi37mbiic2ubgimm2vvu01.apps.googleusercontent.com',
-      clientSecret: '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',
-    }),
-    // ...add more providers here
-  ],
-};
+    CredentialsProvider({
+      id: "credentials",
+      name: "Credentials",
+      async authorize(credentials) {
+        //Check if the user exists.
+        await connect();
 
-export default NextAuth(authOptions);
+        try {
+          const user = await User.findOne({
+            email: credentials.email,
+          });
+
+          if (user) {
+            const isPasswordCorrect = await bcrypt.compare(
+              credentials.password,
+              user.password
+            );
+
+            if (isPasswordCorrect) {
+              return user;
+            } else {
+              throw new Error("Wrong Credentials!");
+            }
+          } else {
+            throw new Error("User not found!");
+          }
+        } catch (err) {
+          throw new Error(err);
+        }
+      },
+    }),
+    GithubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
+  pages: {
+    error: "/dashboard/login",
+  },
+
+});
+
+export { handler as GET, handler as POST };

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
@@ -9,21 +9,18 @@ const userSchema = new Schema(
       unique: true,
       required: true,
     },
-
     email: {
       type: String,
       unique: true,
       required: true,
     },
-
     password: {
       type: String,
-      unique: true,
+      required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-const User = mongoose.models.User || mongoose.model('User', userSchema);
-
-export default User;
+//If the User collection does not exist create a new one.
+export default mongoose.models.User || mongoose.model("User", userSchema);

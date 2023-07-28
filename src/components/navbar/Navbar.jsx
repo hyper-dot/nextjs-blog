@@ -1,49 +1,66 @@
-'use client';
-import React from 'react';
-import Link from 'next/link';
-import styles from './navbar.module.css';
-import DarkModeToggle from '../DarkModeToggle/DarkModeToggle';
+"use client";
 
-function logout() {
-  console.log('logout');
-}
+import Link from "next/link";
+import React from "react";
+import styles from "./navbar.module.css";
+import DarkModeToggle from "../DarkModeToggle/DarkModeToggle";
+import { signOut, useSession } from "next-auth/react";
+
+const links = [
+  {
+    id: 1,
+    title: "Home",
+    url: "/",
+  },
+  {
+    id: 2,
+    title: "Portfolio",
+    url: "/portfolio",
+  },
+  {
+    id: 3,
+    title: "Blog",
+    url: "/blog",
+  },
+  {
+    id: 4,
+    title: "About",
+    url: "/about",
+  },
+  {
+    id: 5,
+    title: "Contact",
+    url: "/contact",
+  },
+  {
+    id: 6,
+    title: "Dashboard",
+    url: "/dashboard",
+  },
+];
 
 const Navbar = () => {
+  const session = useSession();
+
   return (
-    <nav className={styles.container}>
-      <div>
-        <Link href='/' className={styles.logo}>
-          Roshan Paudel
-        </Link>
-      </div>
+    <div className={styles.container}>
+      <Link href="/" className={styles.logo}>
+        lamamia
+      </Link>
       <div className={styles.links}>
         <DarkModeToggle />
-        <Link className={styles.link} href='/dashboard/login'>
-          Login
-        </Link>
-        <Link className={styles.link} href='/dashboard/register'>
-          Register
-        </Link>
-        <Link className={styles.link} href='/dashboard'>
-          Dashboard
-        </Link>
-        <Link className={styles.link} href='/about'>
-          About
-        </Link>
-        <Link className={styles.link} href='/portfolio'>
-          Portfolio
-        </Link>
-        <Link className={styles.link} href='/blog'>
-          Blogs
-        </Link>
-        <Link className={styles.link} href='/contact'>
-          Contact
-        </Link>
-        <button className={styles.logout} onClick={logout}>
-          Logout
-        </button>
+        {links.map((link) => (
+          <Link key={link.id} href={link.url} className={styles.link}>
+            {link.title}
+          </Link>
+        ))}
+        {session.status === "authenticated" && (
+          <button className={styles.logout} onClick={signOut}>
+            Logout
+          </button>
+        )}
       </div>
-    </nav>
+    </div>
   );
 };
 
