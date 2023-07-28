@@ -1,9 +1,10 @@
 import React from 'react';
+import Spinner from '@/components/spinner/Spinner';
 
 const loading = () => {
   return (
     <div>
-      <h1>Loading</h1>
+      <Spinner />
     </div>
   );
 };
